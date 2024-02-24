@@ -26,10 +26,6 @@ test("Verify Login User with valid email and password", async ({ page }) => {
   await SignUpLogin.clickOnLogin();
   await page.waitForTimeout(1000);
   await expect(page.getByText(`Logged in as ${existingUser.name}`)).toBeVisible();
-  await Header.clickOnDeleteAccount();
-  await page.getByText("Account Deleted!").waitFor({ state: "visible" });
-  await expect(page.getByText("Account Deleted!")).toBeVisible();
-  await page.waitForTimeout(1000);
 });
 
 test("Login User with incorrect email and password", async ({ page }) => {

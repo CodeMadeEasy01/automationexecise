@@ -3,17 +3,23 @@ import { HeaderPage } from "./base/header";
 import { HomePage } from "./pages/homePage";
 import { SignUpLoginPage } from "./pages/signUpLogin";
 import { SignUpInfoPage } from "./pages/signUpInfo";
-const accountDetails = JSON.parse(JSON.stringify(require('./testData/accountDetails.json')));
-const existingUser = JSON.parse(JSON.stringify(require('./testData/existingUser.json')));
+const accountDetails = JSON.parse(
+  JSON.stringify(require("./testData/accountDetails.json"))
+);
+const existingUser = JSON.parse(
+  JSON.stringify(require("./testData/existingUser.json"))
+);
 
+test.beforeEach("Go to homepage", async ({ page }) => {
+  const Home = new HomePage(page);
+  await Home.goToHomePage();
+});
 
 test("Register User", async ({ page }) => {
   const Header = new HeaderPage(page);
-  const Home = new HomePage(page);
   const SignUpLogin = new SignUpLoginPage(page);
   const SignUpInfo = new SignUpInfoPage(page);
 
-  await Home.goToHomePage();
   await Header.clickOnsignUpLogin();
   await page
     .getByRole("heading", { name: "New User Signup!" })
@@ -52,4 +58,21 @@ test("Register User", async ({ page }) => {
   await SignUpInfo.selectMobileNumber(accountDetails.mobileNumber);
   await SignUpInfo.clickOnCreateAccount();
   await page.waitForTimeout(1000);
+});
+
+test("Register User with existing email", async ({ page }) => {
+  const Header = new HeaderPage(page);
+  const SignUpLogin = new SignUpLoginPage(page);
+
+  await Header.clickOnsignUpLogin();
+  await page
+    .getByRole("heading", { name: "New User Signup!" })
+    .waitFor({ state: "visible" });
+  await expect(
+    page.getByRole("heading", { name: "New User Signup!" })
+  ).toBeVisible();
+  await SignUpLogin.enterNameSignUp(existingUser.name);
+  await SignUpLogin.enterEmailSignUp(existingUser.email);
+  await SignUpLogin.clickSignUp();
+  await expect(page.getByText("Email Address already exist!")).toBeVisible();
 });
