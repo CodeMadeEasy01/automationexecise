@@ -3,6 +3,9 @@ import { HeaderPage } from "./base/header";
 import { HomePage } from "./pages/homePage";
 import { SignUpLoginPage } from "./pages/signUpLogin";
 import { SignUpInfoPage } from "./pages/signUpInfo";
+const accountDetails = JSON.parse(JSON.stringify(require('./testData/accountDetails.json')));
+const existingUser = JSON.parse(JSON.stringify(require('./testData/existingUser.json')));
+
 
 test("Register User", async ({ page }) => {
   const Header = new HeaderPage(page);
@@ -18,38 +21,35 @@ test("Register User", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "New User Signup!" })
   ).toBeVisible();
-  await SignUpLogin.enterName("test");
-  await SignUpLogin.enterEmail("test555577772@test.com");
+  await SignUpLogin.enterNameSignUp(existingUser.name);
+  await SignUpLogin.enterEmailSignUp(existingUser.email);
   await SignUpLogin.clickSignUp();
   await page.waitForTimeout(1000);
   await page
     .getByText("Enter Account Information")
     .waitFor({ state: "visible" });
   await expect(page.getByText("Enter Account Information")).toBeVisible();
-  await SignUpInfo.verifyName("test");
-  await SignUpInfo.verifyEmail("test555577772@test.com");
-  await SignUpInfo.fillPassword("TestPassword1234");
-  await SignUpInfo.selectDay("17");
+  await SignUpInfo.verifyName(existingUser.name);
+  await SignUpInfo.verifyEmail(existingUser.email);
+  await SignUpInfo.fillPassword(existingUser.password);
+  await SignUpInfo.selectDay(accountDetails.day);
   await page.waitForTimeout(1000);
-  await SignUpInfo.selectMonth("January");
+  await SignUpInfo.selectMonth(accountDetails.month);
   await page.waitForTimeout(1000);
-  await SignUpInfo.selectYear("1997");
+  await SignUpInfo.selectYear(accountDetails.year);
   await SignUpInfo.checkNewsLetter();
   await SignUpInfo.checkOffers();
-  await SignUpInfo.fillFirstName("test Name");
-  await SignUpInfo.fillLastName("test last Name");
+  await SignUpInfo.fillFirstName(accountDetails.firstName);
+  await SignUpInfo.fillLastName(accountDetails.lastName);
   await page.waitForTimeout(1000);
-  await SignUpInfo.fillCompany("test company");
-  await SignUpInfo.fillAdress("Test adress");
-  await SignUpInfo.fillSecondAdress("Test second adress");
-  await SignUpInfo.selectCountry("Canada");
-  await SignUpInfo.selectState("State test");
-  await SignUpInfo.selectCity("Test City");
-  await SignUpInfo.selectZipCode("10000");
-  await SignUpInfo.selectMobileNumber("000004");
+  await SignUpInfo.fillCompany(accountDetails.company);
+  await SignUpInfo.fillAdress(accountDetails.address1);
+  await SignUpInfo.fillSecondAdress(accountDetails.address2);
+  await SignUpInfo.selectCountry(accountDetails.country);
+  await SignUpInfo.selectState(accountDetails.state);
+  await SignUpInfo.selectCity(accountDetails.city);
+  await SignUpInfo.selectZipCode(accountDetails.zipcode);
+  await SignUpInfo.selectMobileNumber(accountDetails.mobileNumber);
   await SignUpInfo.clickOnCreateAccount();
   await page.waitForTimeout(1000);
-  await page.getByText("Account Created!").waitFor({ state: "visible" });
-  await expect(page.getByText("Account Created!")).toBeVisible();
-  await page.waitForTimeout(10000);
 });

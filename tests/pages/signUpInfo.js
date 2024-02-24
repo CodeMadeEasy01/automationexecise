@@ -126,7 +126,6 @@ exports.SignUpInfoPage = class SignUpInfoPage {
     await this.zipCodeChoice.waitFor({ state: "visible" });
     await expect(this.zipCodeChoice).toBeVisible();
     await this.zipCodeChoice.fill(zipCode);
-    await this.page.waitForTimeout(10000);
   }
 
   async selectMobileNumber(mobileNumber) {
